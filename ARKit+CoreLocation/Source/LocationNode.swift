@@ -91,7 +91,8 @@ open class LocationAnnotationNode: LocationNode {
     }
     
     func createBubble(width: CGFloat, height: CGFloat, distance: String! = "0m") -> SCNPlane? {
-        guard let bubbleView: BubbleView = Bundle.main.loadNibNamed("BubbleView", owner: self, options: nil)?.first as? BubbleView else {return nil}
+        let bundle = Bundle(for: BubbleView.self)
+        guard let bubbleView = bundle.loadNibNamed("BubbleView", owner: self, options: nil)?.first as? BubbleView else { return nil }
         
         let offset = CGFloat(54.0)
         var titlePlaceForBubble =  titlePlace!
