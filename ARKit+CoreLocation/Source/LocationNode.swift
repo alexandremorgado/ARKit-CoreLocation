@@ -9,6 +9,7 @@
 import Foundation
 import SceneKit
 import CoreLocation
+import SpriteKit
 
 ///A location node can be added to a scene using a coordinate.
 ///Its scale and position should not be adjusted, as these are used for scene layout purposes
@@ -57,6 +58,8 @@ open class LocationAnnotationNode: LocationNode {
     ///e.g. if the size is 100x100px, the annotation will take up approx 100x100 points on screen.
     public let image: UIImage
     
+    public let titlePlace: String?
+    
     ///Subnodes and adjustments should be applied to this subnode
     ///Required to allow scaling at the same time as having a 2D 'billboard' appearance
     public let annotationNode: SCNNode
@@ -68,23 +71,74 @@ open class LocationAnnotationNode: LocationNode {
     ///For landmarks in the distance, the default is correct
     public var scaleRelativeToDistance = false
     
-    public init(location: CLLocation?, image: UIImage) {
+    public init(location: CLLocation?, image: UIImage, titlePlace: String?) {
         self.image = image
+        self.titlePlace = titlePlace
         
-        let plane = SCNPlane(width: image.size.width / 100, height: image.size.height / 100)
-        plane.firstMaterial!.diffuse.contents = image
-        plane.firstMaterial!.lightingModel = .constant
-        
-        annotationNode = SCNNode()
-        annotationNode.geometry = plane
+        self.annotationNode = SCNNode()
         
         super.init(location: location)
+        
+        if let plane = createBubble(width: 200, height: 80) {
+            annotationNode.geometry = plane
+        }
         
         let billboardConstraint = SCNBillboardConstraint()
         billboardConstraint.freeAxes = SCNBillboardAxis.Y
         constraints = [billboardConstraint]
         
         addChildNode(annotationNode)
+    }
+    
+    func createBubble(width: CGFloat, height: CGFloat, distance: String! = "0m") -> SCNPlane? {
+        guard let bubbleView: BubbleView = Bundle.main.loadNibNamed("BubbleView", owner: self, options: nil)?.first as? BubbleView else {return nil}
+        
+        let offset = CGFloat(54.0)
+        var titlePlaceForBubble =  titlePlace!
+        let maxLengh = 20
+        if titlePlaceForBubble.count > maxLengh {
+            let endIndex = titlePlaceForBubble.index(titlePlaceForBubble.startIndex, offsetBy: maxLengh - 3)
+            titlePlaceForBubble = String(titlePlaceForBubble.prefix(upTo: endIndex))
+            titlePlaceForBubble.append("...")
+        }
+        let textWidth = widthOfString(textString: titlePlaceForBubble, font: bubbleView.placeText.font)
+        let distanceWidth = widthOfString(textString: distance!, font: bubbleView.distance.font)
+        let widthOfBubbleView = offset + textWidth + distanceWidth
+        
+        let width: CGFloat = widthOfBubbleView
+        let height: CGFloat = 80
+        
+        bubbleView.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        bubbleView.placeText.text = titlePlaceForBubble
+        bubbleView.distance.text = distance
+        bubbleView.layoutIfNeeded()
+        
+        UIGraphicsBeginImageContextWithOptions(bubbleView.bounds.size, false, UIScreen.main.scale);
+        bubbleView.layer.render(in: UIGraphicsGetCurrentContext()!)
+        let screenShot = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        let plane = SCNPlane(width: width / 100.0, height: height / 100.0)
+        plane.firstMaterial!.diffuse.contents = screenShot
+        plane.firstMaterial!.lightingModel = .constant
+        
+        return plane
+    }
+    
+    func updateDistance(distanceToLocation: CLLocation?) {
+        
+        if let location = distanceToLocation {
+            let distanceString = "\(String(format: "%.2fm", self.location.distance(from: location)))"
+            if let plane = createBubble(width: 200, height: 80, distance: distanceString) {
+               annotationNode.geometry = plane
+            }
+        }
+    }
+    
+    func widthOfString(textString: String, font: UIFont) -> CGFloat{
+        let fontAttributes = [NSAttributedStringKey.font: font]
+        let size = textString.size(withAttributes: fontAttributes)
+        return size.width
     }
     
     required public init?(coder aDecoder: NSCoder) {

@@ -430,9 +430,14 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
                 }
                 
                 annotationNode.annotationNode.scale = SCNVector3(x: scale, y: scale, z: scale)
+//                annotationNode.textNode.scale = SCNVector3(x: scale, y: scale, z: scale)
+//                annotationNode.textNode.position = SCNVector3(0.0, Float((annotationNode.textNode.geometry as! SCNPlane).height / 2.0 + (annotationNode.annotationNode.geometry as! SCNPlane).height / 2.0), 0.0)
             }
             
             annotationNode.pivot = SCNMatrix4MakeTranslation(0, -1.1 * scale, 0)
+            
+            
+            annotationNode.updateDistance(distanceToLocation: currentLocation)
         }
         
         SCNTransaction.commit()
