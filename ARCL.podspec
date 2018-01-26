@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.resource_bundles = {
      'ARCL' => ['ARKit+CoreLocation/Views/*.xib', 
                 'ARKit+CoreLocation/Assets/*.xcassets', 
-                '*.xcassets']
+                'ARKit+CoreLocation/Resources/**/*']
   }
   s.resources = "ARKit+CoreLocation/Assets/*.xcassets"
   s.frameworks   = 'Foundation', 'UIKit', 'ARKit', 'CoreLocation', 'MapKit', 'SceneKit'
