@@ -12,7 +12,9 @@ Pod::Spec.new do |s|
   s.resource_bundles = {
      'ARCL' => ['ARKit+CoreLocation/Views/*.xib', 'ARKit+CoreLocation/Assets/*.xcassets', 'ARKit+CoreLocation/Assets.xcassets/**/*.{png}']
   }
-  s.resources    = 'ARKit+CoreLocation/Pod/Resources/**/*.{png,storyboard}'
+  s.subspec 'Resources' do |resources|
+    resources.resource_bundle = {'ARCL' => ['Resources/**/*.{png}']}
+  end
   s.frameworks   = 'Foundation', 'UIKit', 'ARKit', 'CoreLocation', 'MapKit', 'SceneKit'
   s.ios.deployment_target = '9.0'
 end
