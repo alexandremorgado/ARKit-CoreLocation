@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.source_files = 'ARKit+CoreLocation/Source/*.swift', 'ARKit+CoreLocation/Views/*.{swift,xib}'
   s.resource_bundles = {
-     'ARCL' => ['ARKit+CoreLocation/Views/*.xib']
+     'ARCL' => ['ARKit+CoreLocation/Views/*.xib', 'ARKit+CoreLocation/Assets/*.xcassets']
   }
   s.frameworks   = 'Foundation', 'UIKit', 'ARKit', 'CoreLocation', 'MapKit', 'SceneKit'
   s.ios.deployment_target = '9.0'
