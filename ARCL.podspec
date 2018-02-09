@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "ARCL"
-  s.version      = "1.0.2"
+  s.version      = "1.1.0"
   s.summary      = "ARKit + CoreLocation combines the high accuracy of AR with the scale of GPS data."
   s.homepage     = "https://github.com/ProjectDent/arkit-corelocation"
   s.author       = { "Andrew Hart" => "Andrew@ProjectDent.com" }
@@ -9,11 +9,6 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '9.0'
   s.requires_arc = true
   s.source_files = 'ARKit+CoreLocation/Source/*.swift', 'ARKit+CoreLocation/Views/*.{swift,xib}'
-  s.resource_bundles = {
-     'ARCL' => ['ARKit+CoreLocation/Views/*.xib', 
-                'ARKit+CoreLocation/Assets/*.xcassets', 
-                'ARKit+CoreLocation/Resources/**/*']
-  }
   s.resources = "ARKit+CoreLocation/Assets/*.xcassets"
   s.frameworks   = 'Foundation', 'UIKit', 'ARKit', 'CoreLocation', 'MapKit', 'SceneKit'
   s.ios.deployment_target = '9.0'
