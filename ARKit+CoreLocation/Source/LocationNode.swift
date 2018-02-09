@@ -59,6 +59,11 @@ open class LocationAnnotationNode: LocationNode {
     public let image: UIImage
     
     public let titlePlace: String?
+    public let ratingPlace: String?
+    public let categoryPlace: String?
+    
+    public let bubbleWidth: CGFloat
+    public let bubbleHeight: CGFloat
     
     ///Subnodes and adjustments should be applied to this subnode
     ///Required to allow scaling at the same time as having a 2D 'billboard' appearance
@@ -71,15 +76,19 @@ open class LocationAnnotationNode: LocationNode {
     ///For landmarks in the distance, the default is correct
     public var scaleRelativeToDistance = false
     
-    public init(location: CLLocation?, image: UIImage, titlePlace: String?) {
+    public init(location: CLLocation?, image: UIImage, titlePlace: String?, ratingPlace: String? = nil, categoryPlace: String? = nil, bubbleWidth: CGFloat = 256, bubbleHeight: CGFloat? = nil) {
         self.image = image
         self.titlePlace = titlePlace
+        self.ratingPlace = ratingPlace
+        self.categoryPlace = categoryPlace
+        self.bubbleWidth = bubbleWidth
+        self.bubbleHeight = bubbleHeight ?? bubbleWidth*9/16
         
         self.annotationNode = SCNNode()
         
         super.init(location: location)
         
-        if let plane = createBubble(width: 200, height: 80) {
+        if let plane = createBubble(width: self.bubbleWidth, height: self.bubbleHeight) {
             annotationNode.geometry = plane
         }
         
@@ -91,8 +100,8 @@ open class LocationAnnotationNode: LocationNode {
     }
     
     func createBubble(width: CGFloat, height: CGFloat, distance: String! = "0m") -> SCNPlane? {
-        let bundle = Bundle(for: BubbleView.self)
-        guard let bubbleView = bundle.loadNibNamed("BubbleView", owner: self, options: nil)?.first as? BubbleView else { return nil }
+        let bundle = Bundle(for: PlaceBubbleView.self)
+        guard let bubbleView = bundle.loadNibNamed("PlaceBubbleView", owner: self, options: nil)?.first as? PlaceBubbleView else { return nil }
         
         let offset = CGFloat(54.0)
         var titlePlaceForBubble =  titlePlace!
@@ -107,11 +116,20 @@ open class LocationAnnotationNode: LocationNode {
         let widthOfBubbleView = offset + textWidth + distanceWidth
         
         let width: CGFloat = widthOfBubbleView
-        let height: CGFloat = 80
+        let height: CGFloat = widthOfBubbleView*9/16
         
         bubbleView.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        
         bubbleView.placeText.text = titlePlaceForBubble
         bubbleView.distance.text = distance
+        
+        bubbleView.ratingLabel.text = ratingPlace
+        bubbleView.ratingLabel.isHidden = ratingPlace == nil
+        bubbleView.setRatingBackgroundColor()
+        
+        bubbleView.categoryLabel.text = categoryPlace
+        bubbleView.categoryLabel.isHidden = categoryPlace == nil
+        
         bubbleView.layoutIfNeeded()
         
         UIGraphicsBeginImageContextWithOptions(bubbleView.bounds.size, false, UIScreen.main.scale);
@@ -130,7 +148,7 @@ open class LocationAnnotationNode: LocationNode {
         
         if let location = distanceToLocation {
             let distanceString = "\(String(format: "%.2fm", self.location.distance(from: location)))"
-            if let plane = createBubble(width: 200, height: 80, distance: distanceString) {
+            if let plane = createBubble(width: bubbleWidth, height: bubbleHeight, distance: distanceString) {
                annotationNode.geometry = plane
             }
         }

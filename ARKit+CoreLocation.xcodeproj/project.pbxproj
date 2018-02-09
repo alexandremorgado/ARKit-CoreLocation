@@ -21,6 +21,10 @@
 		49A3FC031F09BADB00AA59C8 /* FloatingPoint+Radians.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A3FC021F09BADB00AA59C8 /* FloatingPoint+Radians.swift */; };
 		49A3FC051F0A423800AA59C8 /* CGPoint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A3FC041F0A423800AA59C8 /* CGPoint+Extensions.swift */; };
 		49D206F31F124BDD00D7D622 /* SCNNode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D206F21F124BDD00D7D622 /* SCNNode+Extensions.swift */; };
+		4D7D60B5202E15DC004DBD96 /* TriangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7D60B4202E15DC004DBD96 /* TriangleView.swift */; };
+		4D7D60B8202E19A5004DBD96 /* PlaceBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7D60B6202E19A5004DBD96 /* PlaceBubbleView.swift */; };
+		4D7D60B9202E19A5004DBD96 /* PlaceBubbleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D7D60B7202E19A5004DBD96 /* PlaceBubbleView.xib */; };
+		4D7D60BB202E2216004DBD96 /* PlaceBubbleSpriteKitScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7D60BA202E2215004DBD96 /* PlaceBubbleSpriteKitScene.swift */; };
 		4D88100F201BCD580080C4E4 /* ic_triangle.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4D88100E201BCD580080C4E4 /* ic_triangle.pdf */; };
 		5C45E45220054D57006769B6 /* BubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C45E45120054D57006769B6 /* BubbleView.swift */; };
 		5C45E45420054DF6006769B6 /* BubbleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5C45E45320054DF6006769B6 /* BubbleView.xib */; };
@@ -48,6 +52,10 @@
 		49A3FC021F09BADB00AA59C8 /* FloatingPoint+Radians.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FloatingPoint+Radians.swift"; sourceTree = "<group>"; };
 		49A3FC041F0A423800AA59C8 /* CGPoint+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extensions.swift"; sourceTree = "<group>"; };
 		49D206F21F124BDD00D7D622 /* SCNNode+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNNode+Extensions.swift"; sourceTree = "<group>"; };
+		4D7D60B4202E15DC004DBD96 /* TriangleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TriangleView.swift; sourceTree = "<group>"; };
+		4D7D60B6202E19A5004DBD96 /* PlaceBubbleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceBubbleView.swift; sourceTree = "<group>"; };
+		4D7D60B7202E19A5004DBD96 /* PlaceBubbleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaceBubbleView.xib; sourceTree = "<group>"; };
+		4D7D60BA202E2215004DBD96 /* PlaceBubbleSpriteKitScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceBubbleSpriteKitScene.swift; sourceTree = "<group>"; };
 		4D88100E201BCD580080C4E4 /* ic_triangle.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ic_triangle.pdf; sourceTree = "<group>"; };
 		5C45E45120054D57006769B6 /* BubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleView.swift; sourceTree = "<group>"; };
 		5C45E45320054DF6006769B6 /* BubbleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BubbleView.xib; sourceTree = "<group>"; };
@@ -136,6 +144,10 @@
 				5C45E45520055FC9006769B6 /* BubbleSpriteKitScene.swift */,
 				5C45E45120054D57006769B6 /* BubbleView.swift */,
 				5C45E45320054DF6006769B6 /* BubbleView.xib */,
+				4D7D60BA202E2215004DBD96 /* PlaceBubbleSpriteKitScene.swift */,
+				4D7D60B6202E19A5004DBD96 /* PlaceBubbleView.swift */,
+				4D7D60B7202E19A5004DBD96 /* PlaceBubbleView.xib */,
+				4D7D60B4202E15DC004DBD96 /* TriangleView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -223,6 +235,7 @@
 				F286B70E1FFD27C300E100AF /* locations.json in Resources */,
 				5C45E45420054DF6006769B6 /* BubbleView.xib in Resources */,
 				49A3FBE51F09988100AA59C8 /* Assets.xcassets in Resources */,
+				4D7D60B9202E19A5004DBD96 /* PlaceBubbleView.xib in Resources */,
 				4D88100F201BCD580080C4E4 /* ic_triangle.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -290,6 +303,7 @@
 			files = (
 				49099E391F24BAE5007B76FD /* SCNVector3+Extensions.swift in Sources */,
 				49A3FBF71F099C8100AA59C8 /* SceneLocationView.swift in Sources */,
+				4D7D60BB202E2216004DBD96 /* PlaceBubbleSpriteKitScene.swift in Sources */,
 				5C45E45220054D57006769B6 /* BubbleView.swift in Sources */,
 				5C45E45620055FCA006769B6 /* BubbleSpriteKitScene.swift in Sources */,
 				49A3FC031F09BADB00AA59C8 /* FloatingPoint+Radians.swift in Sources */,
@@ -299,9 +313,11 @@
 				49A3FC051F0A423800AA59C8 /* CGPoint+Extensions.swift in Sources */,
 				49A3FBE01F09988100AA59C8 /* ViewController.swift in Sources */,
 				4901EF051F1B7D560067870D /* SceneLocationEstimate+Extensions.swift in Sources */,
+				4D7D60B8202E19A5004DBD96 /* PlaceBubbleView.swift in Sources */,
 				49A3FC011F09B9CF00AA59C8 /* SceneLocationEstimate.swift in Sources */,
 				49A3FBDC1F09988100AA59C8 /* AppDelegate.swift in Sources */,
 				49D206F31F124BDD00D7D622 /* SCNNode+Extensions.swift in Sources */,
+				4D7D60B5202E15DC004DBD96 /* TriangleView.swift in Sources */,
 				49A3FBF51F099A5F00AA59C8 /* LocationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
