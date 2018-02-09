@@ -102,3 +102,13 @@ public extension CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: lat2 * 180 / Double.pi, longitude: lon2 * 180 / Double.pi)
     }
 }
+
+extension CLLocationDistance {
+    
+    var stringFormatted: String {
+        let lengthFormatter = LengthFormatter()
+        lengthFormatter.numberFormatter.maximumFractionDigits = self > 1000 ? 2 : 0
+        return lengthFormatter.string(fromMeters: self)
+    }
+    
+}

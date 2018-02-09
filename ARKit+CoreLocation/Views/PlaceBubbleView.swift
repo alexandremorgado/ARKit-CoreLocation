@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 class PlaceBubbleView: UIView {
 
@@ -29,7 +30,7 @@ class PlaceBubbleView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        bubbleView.layer.cornerRadius = bubbleView.layer.bounds.height / 2
+        bubbleView.layer.cornerRadius = 32
     }
     
     func setRatingBackgroundColor() {
@@ -37,13 +38,18 @@ class PlaceBubbleView: UIView {
         let rating = Double(ratingString) ?? -1
         switch rating {
         case 8...10:
-            ratingLabel.backgroundColor = UIColor.green
+            ratingLabel.backgroundColor = UIColor.flatGreen
         case 6.5...7.99:
-            ratingLabel.backgroundColor = UIColor.yellow
+            ratingLabel.backgroundColor = UIColor.flatYellowDark
         case 0...6.4:
-            ratingLabel.backgroundColor = UIColor.red
+            ratingLabel.backgroundColor = UIColor.flatRed
         default:
             ratingLabel.backgroundColor = UIColor.darkGray
         }
+    }
+    
+    func updateDistanceLabel(nodeLocation: CLLocation, userLocation: CLLocation) {
+        let distanceString = nodeLocation.distance(from: userLocation).stringFormatted
+        distance.text = distanceString
     }
 }

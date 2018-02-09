@@ -53,6 +53,11 @@ open class LocationNode: SCNNode {
 }
 
 open class LocationAnnotationNode: LocationNode {
+    
+    var placeBubbleView: PlaceBubbleView?
+    
+    var lastLocationUpdate: Date
+    
     ///An image to use for the annotation
     ///When viewed from a distance, the annotation will be seen at the size provided
     ///e.g. if the size is 100x100px, the annotation will take up approx 100x100 points on screen.
@@ -76,15 +81,17 @@ open class LocationAnnotationNode: LocationNode {
     ///For landmarks in the distance, the default is correct
     public var scaleRelativeToDistance = false
     
-    public init(location: CLLocation?, image: UIImage, titlePlace: String?, ratingPlace: String? = nil, categoryPlace: String? = nil, bubbleWidth: CGFloat = 256, bubbleHeight: CGFloat? = nil) {
+    public init(location: CLLocation?, image: UIImage, titlePlace: String?, ratingPlace: String? = nil, categoryPlace: String? = nil, bubbleWidth: CGFloat = 256, bubbleHeight: CGFloat = 128) {
         self.image = image
         self.titlePlace = titlePlace
         self.ratingPlace = ratingPlace
         self.categoryPlace = categoryPlace
         self.bubbleWidth = bubbleWidth
-        self.bubbleHeight = bubbleHeight ?? bubbleWidth*9/16
+        self.bubbleHeight = bubbleHeight
         
         self.annotationNode = SCNNode()
+        
+        self.lastLocationUpdate = Date()
         
         super.init(location: location)
         
@@ -105,7 +112,7 @@ open class LocationAnnotationNode: LocationNode {
         
         let offset = CGFloat(54.0)
         var titlePlaceForBubble =  titlePlace!
-        let maxLengh = 20
+        let maxLengh = 25
         if titlePlaceForBubble.count > maxLengh {
             let endIndex = titlePlaceForBubble.index(titlePlaceForBubble.startIndex, offsetBy: maxLengh - 3)
             titlePlaceForBubble = String(titlePlaceForBubble.prefix(upTo: endIndex))
@@ -116,7 +123,7 @@ open class LocationAnnotationNode: LocationNode {
         let widthOfBubbleView = offset + textWidth + distanceWidth
         
         let width: CGFloat = widthOfBubbleView
-        let height: CGFloat = widthOfBubbleView*9/16
+        let height: CGFloat = height
         
         bubbleView.frame = CGRect(x: 0, y: 0, width: width, height: height)
         
@@ -127,7 +134,7 @@ open class LocationAnnotationNode: LocationNode {
         bubbleView.ratingLabel.isHidden = ratingPlace == nil
         bubbleView.setRatingBackgroundColor()
         
-        bubbleView.categoryLabel.text = categoryPlace
+        bubbleView.categoryLabel.text = categoryPlace?.uppercased()
         bubbleView.categoryLabel.isHidden = categoryPlace == nil
         
         bubbleView.layoutIfNeeded()
@@ -145,13 +152,18 @@ open class LocationAnnotationNode: LocationNode {
     }
     
     func updateDistance(distanceToLocation: CLLocation?) {
+        let pastTime = Date().timeIntervalSince1970 - lastLocationUpdate.timeIntervalSince1970
+        guard pastTime > 10 else { return }
         
-        if let location = distanceToLocation {
-            let distanceString = "\(String(format: "%.2fm", self.location.distance(from: location)))"
-            if let plane = createBubble(width: bubbleWidth, height: bubbleHeight, distance: distanceString) {
-               annotationNode.geometry = plane
-            }
+        guard let userlocation = distanceToLocation else { return }
+        
+//        let distanceString = "\(String(format: "%.0fm", self.location.distance(from: userlocation)))"
+        let distanceString = self.location.distance(from: userlocation).stringFormatted
+        if let plane = createBubble(width: bubbleWidth, height: bubbleHeight, distance: distanceString) {
+            annotationNode.geometry = plane
         }
+        
+        lastLocationUpdate = Date()
     }
     
     func widthOfString(textString: String, font: UIFont) -> CGFloat{
