@@ -54,8 +54,7 @@ open class LocationNode: SCNNode {
 
 open class LocationAnnotationNode: LocationNode {
     
-    var placeBubbleView: PlaceBubbleView?
-    
+    var initialUserLocation: CLLocation?
     var lastLocationUpdate: Date
     
     ///An image to use for the annotation
@@ -81,7 +80,7 @@ open class LocationAnnotationNode: LocationNode {
     ///For landmarks in the distance, the default is correct
     public var scaleRelativeToDistance = false
     
-    public init(location: CLLocation?, image: UIImage, titlePlace: String?, ratingPlace: String? = nil, categoryPlace: String? = nil, bubbleWidth: CGFloat = 256, bubbleHeight: CGFloat = 128) {
+    public init(nodeLocation: CLLocation?, userLocation: CLLocation? = nil, image: UIImage, titlePlace: String?, ratingPlace: String? = nil, categoryPlace: String? = nil, bubbleWidth: CGFloat = 256, bubbleHeight: CGFloat = 128) {
         self.image = image
         self.titlePlace = titlePlace
         self.ratingPlace = ratingPlace
@@ -91,11 +90,16 @@ open class LocationAnnotationNode: LocationNode {
         
         self.annotationNode = SCNNode()
         
+        self.initialUserLocation = userLocation
         self.lastLocationUpdate = Date()
         
-        super.init(location: location)
+        super.init(location: nodeLocation)
         
-        if let plane = createBubble(width: self.bubbleWidth, height: self.bubbleHeight) {
+        let distanceString: String = {
+            guard let location = nodeLocation, let userLocation = initialUserLocation else { return "" }
+            return location.distance(from: userLocation).stringFormatted
+        }()
+        if let plane = createBubble(width: self.bubbleWidth, height: self.bubbleHeight, distance: distanceString) {
             annotationNode.geometry = plane
         }
         
@@ -106,7 +110,7 @@ open class LocationAnnotationNode: LocationNode {
         addChildNode(annotationNode)
     }
     
-    func createBubble(width: CGFloat, height: CGFloat, distance: String! = "0m") -> SCNPlane? {
+    func createBubble(width: CGFloat, height: CGFloat, distance: String) -> SCNPlane? {
         let bundle = Bundle(for: PlaceBubbleView.self)
         guard let bubbleView = bundle.loadNibNamed("PlaceBubbleView", owner: self, options: nil)?.first as? PlaceBubbleView else { return nil }
         
@@ -119,7 +123,7 @@ open class LocationAnnotationNode: LocationNode {
             titlePlaceForBubble.append("...")
         }
         let textWidth = widthOfString(textString: titlePlaceForBubble, font: bubbleView.placeText.font)
-        let distanceWidth = widthOfString(textString: distance!, font: bubbleView.distance.font)
+        let distanceWidth = widthOfString(textString: distance, font: bubbleView.distance.font)
         let widthOfBubbleView = offset + textWidth + distanceWidth
         
         let width: CGFloat = widthOfBubbleView
@@ -128,7 +132,12 @@ open class LocationAnnotationNode: LocationNode {
         bubbleView.frame = CGRect(x: 0, y: 0, width: width, height: height)
         
         bubbleView.placeText.text = titlePlaceForBubble
-        bubbleView.distance.text = distance
+        
+        if let userLocation = initialUserLocation {
+            bubbleView.distance.text = location.distance(from: userLocation).stringFormatted
+        } else {
+            bubbleView.distance.text = ""
+        }
         
         bubbleView.ratingLabel.text = ratingPlace
         bubbleView.ratingLabel.isHidden = ratingPlace == nil
@@ -151,13 +160,12 @@ open class LocationAnnotationNode: LocationNode {
         return plane
     }
     
+    
+    
     func updateDistance(distanceToLocation: CLLocation?) {
         let pastTime = Date().timeIntervalSince1970 - lastLocationUpdate.timeIntervalSince1970
-        guard pastTime > 10 else { return }
+        guard pastTime > 6, let userlocation = distanceToLocation else { return }
         
-        guard let userlocation = distanceToLocation else { return }
-        
-//        let distanceString = "\(String(format: "%.0fm", self.location.distance(from: userlocation)))"
         let distanceString = self.location.distance(from: userlocation).stringFormatted
         if let plane = createBubble(width: bubbleWidth, height: bubbleHeight, distance: distanceString) {
             annotationNode.geometry = plane

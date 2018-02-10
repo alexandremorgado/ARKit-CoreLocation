@@ -11,18 +11,25 @@ import CoreLocation
 
 class PlaceBubbleView: UIView {
 
-    @IBOutlet var bubbleView: UIView!
-    @IBOutlet var categoryLabel: UILabel!
-    @IBOutlet var placeText: UILabel!
-    @IBOutlet var distance: UILabel!
+    @IBOutlet weak var bubbleView: UIView!
+    
+    @IBOutlet weak var contentStackView: UIStackView!
+    
+    @IBOutlet weak var categoryLabel: UILabel!
+    @IBOutlet weak var placeText: UILabel!
+    @IBOutlet weak var distance: UILabel!
     @IBOutlet weak var infoButton: UIButton!
     
-    @IBOutlet var ratingLabel: UILabel!
+    @IBOutlet weak var ratingLabel: UILabel!
+    
+    @IBOutlet weak var triangleView: TriangleView!
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
         bubbleView.clipsToBounds = true
+        bubbleView.layer.borderColor = UIColor.clear.cgColor
         
         ratingLabel.layer.cornerRadius = 4
         ratingLabel.layer.masksToBounds = true

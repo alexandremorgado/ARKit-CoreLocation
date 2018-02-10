@@ -79,7 +79,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
                         let pinCenterCoordinate = CLLocationCoordinate2D(latitude: dictinary["latitude"] as! CLLocationDegrees, longitude: dictinary["longitude"] as! CLLocationDegrees)
                         let pinCenterLocation = CLLocation(coordinate: pinCenterCoordinate, altitude: dictinary["altitude"] as! CLLocationDegrees)
                         let pinCenterImage = UIImage(named: dictinary["pinImage"] as! String)!
-                        let pinCenterLocationNode = LocationAnnotationNode(location: pinCenterLocation, image: pinCenterImage, titlePlace: dictinary["name"] as? String)
+                        let pinCenterLocationNode = LocationAnnotationNode(nodeLocation: pinCenterLocation, image: pinCenterImage, titlePlace: dictinary["name"] as? String)
                         sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: pinCenterLocationNode)
                     }
                 }
