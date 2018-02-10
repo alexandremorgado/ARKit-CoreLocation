@@ -80,7 +80,7 @@ open class LocationAnnotationNode: LocationNode {
     ///For landmarks in the distance, the default is correct
     public var scaleRelativeToDistance = false
     
-    public init(nodeLocation: CLLocation?, userLocation: CLLocation? = nil, image: UIImage, titlePlace: String?, ratingPlace: String? = nil, categoryPlace: String? = nil, bubbleWidth: CGFloat = 256, bubbleHeight: CGFloat = 128) {
+    public init(nodeLocation: CLLocation?, userLocation: CLLocation? = nil, image: UIImage, titlePlace: String?, ratingPlace: String? = nil, categoryPlace: String? = nil, bubbleWidth: CGFloat = 256, bubbleHeight: CGFloat = 142) {
         self.image = image
         self.titlePlace = titlePlace
         self.ratingPlace = ratingPlace
@@ -116,7 +116,7 @@ open class LocationAnnotationNode: LocationNode {
         
         let offset = CGFloat(54.0)
         var titlePlaceForBubble =  titlePlace!
-        let maxLengh = 25
+        let maxLengh = 30
         if titlePlaceForBubble.count > maxLengh {
             let endIndex = titlePlaceForBubble.index(titlePlaceForBubble.startIndex, offsetBy: maxLengh - 3)
             titlePlaceForBubble = String(titlePlaceForBubble.prefix(upTo: endIndex))
@@ -137,6 +137,7 @@ open class LocationAnnotationNode: LocationNode {
             bubbleView.distance.text = location.distance(from: userLocation).stringFormatted
         } else {
             bubbleView.distance.text = ""
+            bubbleView.distance.isHidden = true 
         }
         
         bubbleView.ratingLabel.text = ratingPlace
