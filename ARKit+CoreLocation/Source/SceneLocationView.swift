@@ -55,6 +55,7 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
     public var showAxesNode = false
     
     private(set) var locationNodes = [LocationNode]()
+    private(set) var polylineNodes = [PolylineNode]()
     
     private var sceneLocationEstimates = [SceneLocationEstimate]()
     
@@ -120,6 +121,8 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
     }
     
     public func run() {
+        locationManager.startMoninoring()
+        
         // Create a session configuration
 		let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal
@@ -141,6 +144,8 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
         session.pause()
         updateEstimatesTimer?.invalidate()
         updateEstimatesTimer = nil
+        
+        locationManager.stopMoninoring()
     }
     
     @objc private func updateLocationData() {
@@ -493,6 +498,29 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
             print("camera did change tracking state: normal")
         case .notAvailable:
             print("camera did change tracking state: not available")
+        }
+    }
+}
+
+@available(iOS 11.0, *)
+public extension SceneLocationView {
+    public func addRoutes(routes: [MKRoute]) {
+        guard let altitude = locationManager.currentLocation?.altitude else { return }
+        let polyNodes = routes.map { PolylineNode(polyline: $0.polyline, altitude: altitude - 2.0) }
+        
+        polylineNodes.append(contentsOf: polyNodes)
+        polyNodes.forEach {
+            $0.locationNodes.forEach {
+                addLocationNodeWithConfirmedLocation(locationNode: $0)
+            }
+        }
+    }
+    
+    public func removeRoutes(routes: [MKRoute]) {
+        routes.forEach { route in
+            if let index = polylineNodes.index(where: { $0.polyline == route.polyline }) {
+                polylineNodes.remove(at: index)
+            }
         }
     }
 }

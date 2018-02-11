@@ -35,12 +35,22 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         self.locationManager!.headingFilter = kCLHeadingFilterNone
         self.locationManager!.pausesLocationUpdatesAutomatically = false
         self.locationManager!.delegate = self
-        self.locationManager!.startUpdatingHeading()
-        self.locationManager!.startUpdatingLocation()
+        
+        startMoninoring()
         
         self.locationManager!.requestWhenInUseAuthorization()
         
         self.currentLocation = self.locationManager!.location
+    }
+    
+    func startMoninoring() {
+        self.locationManager!.startUpdatingHeading()
+        self.locationManager!.startUpdatingLocation()
+    }
+    
+    func stopMoninoring() {
+        self.locationManager!.stopUpdatingLocation()
+        self.locationManager!.stopUpdatingHeading()
     }
     
     func requestAuthorization() {
