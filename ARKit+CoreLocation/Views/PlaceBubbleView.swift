@@ -33,6 +33,10 @@ class PlaceBubbleView: UIView {
         
         ratingLabel.layer.cornerRadius = 4
         ratingLabel.layer.masksToBounds = true
+        
+        if #available(iOS 11.0, *) {
+            contentStackView.setCustomSpacing(2, after: placeText)
+        }
     }
     
     override func layoutSubviews() {

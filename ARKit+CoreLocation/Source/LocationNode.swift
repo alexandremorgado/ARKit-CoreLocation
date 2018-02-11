@@ -133,12 +133,7 @@ open class LocationAnnotationNode: LocationNode {
         
         bubbleView.placeText.text = titlePlaceForBubble
         
-        if let userLocation = initialUserLocation {
-            bubbleView.distance.text = location.distance(from: userLocation).stringFormatted
-        } else {
-            bubbleView.distance.text = ""
-            bubbleView.distance.isHidden = true 
-        }
+        bubbleView.distance.text = distance
         
         bubbleView.ratingLabel.text = ratingPlace
         bubbleView.ratingLabel.isHidden = ratingPlace == nil
