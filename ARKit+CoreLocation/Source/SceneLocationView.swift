@@ -57,6 +57,10 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
     private(set) var locationNodes = [LocationNode]()
     private(set) var polylineNodes = [PolylineNode]()
     
+    public var headingAccuracy: CLLocationDegrees? {
+        return locationManager.headingAccuracy
+    }
+    
     private var sceneLocationEstimates = [SceneLocationEstimate]()
     
     public private(set) var sceneNode: SCNNode? {
