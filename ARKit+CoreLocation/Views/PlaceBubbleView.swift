@@ -18,6 +18,7 @@ class PlaceBubbleView: UIView {
     @IBOutlet weak var categoryLabel: UILabel!
     @IBOutlet weak var placeText: UILabel!
     @IBOutlet weak var distance: UILabel!
+    @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var infoButton: UIButton!
     
     @IBOutlet weak var ratingLabel: UILabel!

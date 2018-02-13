@@ -65,6 +65,7 @@ open class LocationAnnotationNode: LocationNode {
     public let titlePlace: String?
     public let ratingPlace: String?
     public let categoryPlace: String?
+    public let address: String?
     
     public let bubbleWidth: CGFloat
     public let bubbleHeight: CGFloat
@@ -80,11 +81,12 @@ open class LocationAnnotationNode: LocationNode {
     ///For landmarks in the distance, the default is correct
     public var scaleRelativeToDistance = false
     
-    public init(nodeLocation: CLLocation?, userLocation: CLLocation? = nil, image: UIImage, titlePlace: String?, ratingPlace: String? = nil, categoryPlace: String? = nil, bubbleWidth: CGFloat = 256, bubbleHeight: CGFloat = 142) {
+    public init(nodeLocation: CLLocation?, userLocation: CLLocation? = nil, image: UIImage, titlePlace: String?, ratingPlace: String? = nil, categoryPlace: String? = nil, address: String? = nil, bubbleWidth: CGFloat = 256, bubbleHeight: CGFloat = 142) {
         self.image = image
         self.titlePlace = titlePlace
         self.ratingPlace = ratingPlace
         self.categoryPlace = categoryPlace
+        self.address = address
         self.bubbleWidth = bubbleWidth
         self.bubbleHeight = bubbleHeight
         
@@ -135,6 +137,9 @@ open class LocationAnnotationNode: LocationNode {
         
         bubbleView.distance.text = distance
         
+        bubbleView.addressLabel.text = address
+        bubbleView.addressLabel.isHidden = address == nil
+        
         bubbleView.ratingLabel.text = ratingPlace
         bubbleView.ratingLabel.isHidden = ratingPlace == nil
         bubbleView.setRatingBackgroundColor()
@@ -160,14 +165,16 @@ open class LocationAnnotationNode: LocationNode {
     
     func updateDistance(distanceToLocation: CLLocation?) {
         let pastTime = Date().timeIntervalSince1970 - lastLocationUpdate.timeIntervalSince1970
-        guard pastTime > 6, let userlocation = distanceToLocation else { return }
+        guard pastTime > 3, let userlocation = distanceToLocation else { return }
         
-        let distanceString = self.location.distance(from: userlocation).stringFormatted
-        if let plane = createBubble(width: bubbleWidth, height: bubbleHeight, distance: distanceString) {
-            annotationNode.geometry = plane
+        DispatchQueue.main.async { [weak self] in
+            guard let strongSelf = self else { return }
+            let distanceString = strongSelf.location.distance(from: userlocation).stringFormatted
+            if let plane = strongSelf.createBubble(width: strongSelf.bubbleWidth, height: strongSelf.bubbleHeight, distance: distanceString) {
+                strongSelf.annotationNode.geometry = plane
+            }
+            strongSelf.lastLocationUpdate = Date()
         }
-        
-        lastLocationUpdate = Date()
     }
     
     func widthOfString(textString: String, font: UIFont) -> CGFloat{
