@@ -41,6 +41,8 @@ open class LocationNode: SCNNode {
     ///at regular intervals. You can do this with `SceneLocationView`'s `updatePositionOfLocationNode`.
     public var continuallyUpdatePositionAndScale = true
     
+    public var scalingScheme: ScalingScheme = .normal
+    
     public init(location: CLLocation?) {
         self.location = location
         self.locationConfirmed = location != nil
