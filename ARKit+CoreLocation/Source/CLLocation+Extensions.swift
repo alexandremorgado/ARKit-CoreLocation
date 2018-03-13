@@ -8,8 +8,7 @@
 
 import Foundation
 import CoreLocation
-
-let EARTH_RADIUS = 6371000.0
+import MapKit
 
 ///Translation in meters between 2 locations
 public struct LocationTranslation {
@@ -122,9 +121,11 @@ public extension CLLocationCoordinate2D {
 extension CLLocationDistance {
     
     var stringFormatted: String {
-        let lengthFormatter = LengthFormatter()
-        lengthFormatter.numberFormatter.maximumFractionDigits = self > 1000 ? 2 : 0
-        return lengthFormatter.string(fromMeters: self)
+        let formatter = MKDistanceFormatter()
+        formatter.unitStyle = .abbreviated
+        let distanceString = formatter.string(fromDistance: self)
+        return distanceString
     }
+    
     
 }

@@ -386,11 +386,13 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
         
         let distance = locationNodeLocation.distance(from: currentLocation)
         
+        let nearDistance: Double = 150
+        
         if locationNode.locationConfirmed &&
-            (distance > 100 || locationNode.continuallyAdjustNodePositionWhenWithinRange || initialSetup) {
-            if distance > 100 {
+            (distance > nearDistance || locationNode.continuallyAdjustNodePositionWhenWithinRange || initialSetup) {
+            if distance > nearDistance {
                 //If the item is too far away, bring it closer and scale it down
-                let scale = 100 / Float(distance)
+                let scale = Float(nearDistance) / Float(distance)
                 
                 adjustedDistance = distance * Double(scale)
                 
@@ -409,9 +411,15 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
                 locationNode.scale = SCNVector3(x: scale, y: scale, z: scale)
             } else {
                 adjustedDistance = distance
+                
+                let altitudeAdjustment = distance/nearDistance
+                
+                let minPosY = [Float(locationTranslation.altitudeTranslation * altitudeAdjustment), 0].min() ?? 1
+                let posY = [(currentPosition.y + minPosY), 3].min() ?? 1
+                
                 let position = SCNVector3(
                     x: currentPosition.x + Float(locationTranslation.longitudeTranslation),
-                    y: currentPosition.y + Float(locationTranslation.altitudeTranslation),
+                    y: posY,
                     z: currentPosition.z - Float(locationTranslation.latitudeTranslation))
                 
                 locationNode.position = position

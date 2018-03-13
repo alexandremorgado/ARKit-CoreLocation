@@ -17,7 +17,7 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="142"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y1L-Ku-aq4">
+                <view alpha="0.90000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y1L-Ku-aq4">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="122"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="Jg6-GJ-0Qx">
@@ -81,7 +81,7 @@
                             <color key="tintColor" red="0.050980392159999999" green="0.89019607840000003" blue="0.55294117649999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstItem="Jg6-GJ-0Qx" firstAttribute="top" secondItem="Y1L-Ku-aq4" secondAttribute="top" constant="15" id="81Y-Bf-6Oj"/>
                         <constraint firstItem="Jg6-GJ-0Qx" firstAttribute="leading" secondItem="Y1L-Ku-aq4" secondAttribute="leading" constant="20" id="EVg-pQ-oBI"/>
