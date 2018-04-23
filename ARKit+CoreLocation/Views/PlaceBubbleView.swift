@@ -30,7 +30,8 @@ class PlaceBubbleView: UIView {
         super.awakeFromNib()
         
         bubbleView.clipsToBounds = true
-        bubbleView.layer.borderColor = UIColor.clear.cgColor
+        bubbleView.layer.borderColor = UIColor.white.cgColor
+        bubbleView.layer.borderWidth = 3
         
         ratingLabel.layer.cornerRadius = 4
         ratingLabel.layer.masksToBounds = true
@@ -50,7 +51,7 @@ class PlaceBubbleView: UIView {
         let rating = Double(ratingString) ?? -1
         switch rating {
         case 8...10:
-            ratingLabel.backgroundColor = UIColor.flatGreen
+            ratingLabel.backgroundColor = UIColor.green
         case 6.5...7.99:
             ratingLabel.backgroundColor = UIColor.flatYellowDark
         case 0...6.4:
