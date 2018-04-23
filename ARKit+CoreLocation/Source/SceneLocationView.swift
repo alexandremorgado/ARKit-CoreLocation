@@ -414,8 +414,8 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
                 
                 let altitudeAdjustment = distance/nearDistance
                 
-                let minPosY = [Float(locationTranslation.altitudeTranslation * altitudeAdjustment), 0].min() ?? 1
-                let posY = [(currentPosition.y + minPosY), 3].min() ?? 1
+                let minPosY = [Float(locationTranslation.altitudeTranslation * altitudeAdjustment), 0].min() ?? 2
+                let posY = [(currentPosition.y + minPosY), 4].min() ?? 2
                 
                 let position = SCNVector3(
                     x: currentPosition.x + Float(locationTranslation.longitudeTranslation),
