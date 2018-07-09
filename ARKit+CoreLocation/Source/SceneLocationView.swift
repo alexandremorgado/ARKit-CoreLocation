@@ -428,13 +428,20 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
                 locationNode.scale = SCNVector3(x: scale, y: scale, z: scale)
             } else {
                 adjustedDistance = distance
+                
+                let altitudeAdjustment = distance/nearDistance
+                
+                let minPosY = [Float(locationTranslation.altitudeTranslation * altitudeAdjustment), 0].min() ?? 2
+                let posY = [(currentPosition.y + minPosY), 4].min() ?? 2
+                
                 let position = SCNVector3(
                     x: currentPosition.x + Float(locationTranslation.longitudeTranslation),
-                    y: currentPosition.y + Float(locationTranslation.altitudeTranslation),
+                    y: posY,
                     z: currentPosition.z - Float(locationTranslation.latitudeTranslation))
                 
                 locationNode.position = position
                 locationNode.scale = SCNVector3(x: 1, y: 1, z: 1)
+
             }
         } else {
             //Calculates distance based on the distance within the scene, as the location isn't yet confirmed

@@ -24,6 +24,7 @@ class PlaceBubbleView: UIView {
     @IBOutlet weak var ratingLabel: UILabel!
     
     @IBOutlet weak var triangleView: TriangleView!
+    @IBOutlet weak var borderTriangleView: TriangleView!
     
     
     override func awakeFromNib() {
