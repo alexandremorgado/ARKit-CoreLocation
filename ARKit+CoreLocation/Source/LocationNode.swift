@@ -18,6 +18,9 @@ open class LocationNode: SCNNode {
     ///Location can be changed and confirmed later by SceneLocationView.
     public var location: CLLocation!
     
+    /// A general purpose tag that can be used to find nodes already added to a SceneLocationView
+    public var tag: String?
+    
     ///Whether the location of the node has been confirmed.
     ///This is automatically set to true when you create a node using a location.
     ///Otherwise, this is false, and becomes true once the user moves 100m away from the node,
@@ -40,8 +43,6 @@ open class LocationNode: SCNNode {
     ///This should only be set to false if you plan to manually update position and scale
     ///at regular intervals. You can do this with `SceneLocationView`'s `updatePositionOfLocationNode`.
     public var continuallyUpdatePositionAndScale = true
-    
-    public var scalingScheme: ScalingScheme = .normal
     
     public init(location: CLLocation?) {
         self.location = location

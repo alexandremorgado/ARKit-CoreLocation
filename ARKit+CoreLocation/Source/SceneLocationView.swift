@@ -50,11 +50,11 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
     ///Not advisable to change this as the scene is ongoing.
     public var locationEstimateMethod: LocationEstimateMethod = .mostRelevantEstimate
     
-    let locationManager = LocationManager()
+    public let locationManager = LocationManager()
     ///When set to true, displays an axes node at the start of the scene
     public var showAxesNode = false
     
-    private(set) var locationNodes = [LocationNode]()
+    public private(set) var locationNodes = [LocationNode]()
     private(set) var polylineNodes = [PolylineNode]()
     
     public var headingAccuracy: CLLocationDegrees? {
@@ -81,7 +81,7 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
     
     ///Whether debugging feature points should be displayed.
     ///Defaults to false
-    var showFeaturePoints = false
+    public var showFeaturePoints = false
     
     ///Only to be overrided if you plan on manually setting True North.
     ///When true, sets up the scene to face what the device considers to be True North.
@@ -125,10 +125,8 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
     }
     
     public func run() {
-        locationManager.startMoninoring()
-        
         // Create a session configuration
-		let configuration = ARWorldTrackingConfiguration()
+        let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal
         
         if orientToTrueNorth {
@@ -148,8 +146,6 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
         session.pause()
         updateEstimatesTimer?.invalidate()
         updateEstimatesTimer = nil
-        
-        locationManager.stopMoninoring()
     }
     
     @objc private func updateLocationData() {
@@ -297,6 +293,34 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
         sceneNode?.addChildNode(locationNode)
     }
     
+    public func removeAllNodes() {
+        locationNodes.removeAll()
+        guard let childNodes = sceneNode?.childNodes else { return }
+        for node in childNodes {
+            node.removeFromParentNode()
+        }
+    }
+    
+    /// Determine if scene contains a node with the specified tag
+    ///
+    /// - Parameter tag: tag text
+    /// - Returns: true if a LocationNode with the tag exists; false otherwise
+    public func sceneContainsNodeWithTag(_ tag: String) -> Bool {
+        return findNodes(tagged: tag).count > 0
+    }
+    
+    /// Find all location nodes in the scene tagged with `tag`
+    ///
+    /// - Parameter tag: The tag text for which to search nodes.
+    /// - Returns: A list of all matching tags
+    public func findNodes(tagged tag: String) -> [LocationNode] {
+        guard tag.count > 0 else {
+            return []
+        }
+        
+        return locationNodes.filter { $0.tag == tag }
+    }
+    
     public func removeLocationNode(locationNode: LocationNode) {
         if let index = locationNodes.index(of: locationNode) {
             locationNodes.remove(at: index)
@@ -365,25 +389,18 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
     public func updatePositionAndScaleOfLocationNode(locationNode: LocationNode, initialSetup: Bool = false, animated: Bool = false, duration: TimeInterval = 0.1) {
         guard let currentPosition = currentScenePosition(),
             let currentLocation = currentLocation() else {
-            return
+                return
         }
         
         SCNTransaction.begin()
         
-        if animated {
-            SCNTransaction.animationDuration = duration
-        } else {
-            SCNTransaction.animationDuration = 0
-        }
+        SCNTransaction.animationDuration = animated ? duration : 0
         
         let locationNodeLocation = locationOfLocationNode(locationNode)
         
-        //Position is set to a position coordinated via the current position
+        // Position is set to a position coordinated via the current position
         let locationTranslation = currentLocation.translation(toLocation: locationNodeLocation)
-        
-        
         let adjustedDistance: CLLocationDistance
-        
         let distance = locationNodeLocation.distance(from: currentLocation)
         
         let nearDistance: Double = 150
@@ -411,15 +428,9 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
                 locationNode.scale = SCNVector3(x: scale, y: scale, z: scale)
             } else {
                 adjustedDistance = distance
-                
-                let altitudeAdjustment = distance/nearDistance
-                
-                let minPosY = [Float(locationTranslation.altitudeTranslation * altitudeAdjustment), 0].min() ?? 1
-                let posY = [(currentPosition.y + minPosY), 3].min() ?? 1
-                
                 let position = SCNVector3(
                     x: currentPosition.x + Float(locationTranslation.longitudeTranslation),
-                    y: posY,
+                    y: currentPosition.y + Float(locationTranslation.altitudeTranslation),
                     z: currentPosition.z - Float(locationTranslation.latitudeTranslation))
                 
                 locationNode.position = position
@@ -440,42 +451,26 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
             
             var scale: Float
             
-            if annotationNode.scaleRelativeToDistance && distance > 150 {
-                scale = Float(adjustedDistance) * 0.181
-                let distanceFactor = [1-Float(distance)/700, 0.65].max() ?? 1
-                scale = scale * distanceFactor
-                annotationNode.annotationNode.scale = SCNVector3(x: scale, y: scale, z: scale)
+            //if annotationNode.scaleRelativeToDistance && distance > 150 {
+            if annotationNode.scaleRelativeToDistance {
+//                scale = Float(adjustedDistance) * 0.181
+//                let distanceFactor = [1-Float(distance)/700, 0.65].max() ?? 1
+//                scale = scale * distanceFactor
+//                annotationNode.annotationNode.scale = SCNVector3(x: scale, y: scale, z: scale)
+                scale = appliedScale.y
+                annotationNode.annotationNode.scale = appliedScale
             } else {
-                switch annotationNode.scalingScheme {
-                case .tiered:
-                    scale = Float(adjustedDistance) * 0.181
-                    if distance > 5 {
-                        scale = scale * 0.5
-                    }
-                case .doubleTiered:
-                    let scaleFunc = annotationNode.scalingScheme.getScheme()
-                    scale = scaleFunc(distance, adjustedDistance)
-                case .linear:
-                    let scaleFunc = annotationNode.scalingScheme.getScheme()
-                    scale = scaleFunc(distance, adjustedDistance)
-                case .linearBuffer:
-                    let scaleFunc = annotationNode.scalingScheme.getScheme()
-                    scale = scaleFunc(distance, adjustedDistance)
-                default:
-                    //Scale it to be an appropriate size so that it can be seen
-                    scale = Float(adjustedDistance) * 0.181
-                    if distance > 3000 {
-                        scale = scale * 0.75
-                    }
-                    
+                //Scale it to be an appropriate size so that it can be seen
+                scale = Float(adjustedDistance) * 0.181
+                
+                if distance > 3000 {
+                    scale = scale * 0.75
                 }
+                
                 annotationNode.annotationNode.scale = SCNVector3(x: scale, y: scale, z: scale)
             }
             
             annotationNode.pivot = SCNMatrix4MakeTranslation(0, -1.1 * scale, 0)
-            
-            
-            annotationNode.updateDistance(distanceToLocation: currentLocation)
         }
         
         SCNTransaction.commit()
