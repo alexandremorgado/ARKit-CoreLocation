@@ -453,19 +453,16 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
         if let annotationNode = locationNode as? LocationAnnotationNode {
             //The scale of a node with a billboard constraint applied is ignored
             //The annotation subnode itself, as a subnode, has the scale applied to it
-            let appliedScale = locationNode.scale
+//            let appliedScale = locationNode.scale
             locationNode.scale = SCNVector3(x: 1, y: 1, z: 1)
             
             var scale: Float
             
-            //if annotationNode.scaleRelativeToDistance && distance > 150 {
-            if annotationNode.scaleRelativeToDistance {
-//                scale = Float(adjustedDistance) * 0.181
-//                let distanceFactor = [1-Float(distance)/700, 0.65].max() ?? 1
-//                scale = scale * distanceFactor
-//                annotationNode.annotationNode.scale = SCNVector3(x: scale, y: scale, z: scale)
-                scale = appliedScale.y
-                annotationNode.annotationNode.scale = appliedScale
+            if annotationNode.scaleRelativeToDistance && distance > nearDistance {
+                scale = Float(adjustedDistance) * 0.181
+                let distanceFactor = [1-Float(distance)/700, 0.65].max() ?? 1
+                scale = scale * distanceFactor
+                annotationNode.annotationNode.scale = SCNVector3(x: scale, y: scale, z: scale)
             } else {
                 //Scale it to be an appropriate size so that it can be seen
                 scale = Float(adjustedDistance) * 0.181
