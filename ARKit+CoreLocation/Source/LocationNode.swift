@@ -68,6 +68,7 @@ open class LocationAnnotationNode: LocationNode {
     public let titlePlace: String?
     public let ratingPlace: String?
     public let categoryPlace: String?
+    public let categoryColor: UIColor?
     public let address: String?
     
     public let bubbleWidth: CGFloat
@@ -84,11 +85,12 @@ open class LocationAnnotationNode: LocationNode {
     ///For landmarks in the distance, the default is correct
     public var scaleRelativeToDistance = false
     
-    public init(nodeLocation: CLLocation?, userLocation: CLLocation? = nil, image: UIImage, titlePlace: String?, ratingPlace: String? = nil, categoryPlace: String? = nil, address: String? = nil, bubbleWidth: CGFloat = 256, bubbleHeight: CGFloat = 142) {
+    public init(nodeLocation: CLLocation?, userLocation: CLLocation? = nil, image: UIImage, titlePlace: String?, ratingPlace: String? = nil, categoryPlace: String? = nil, categoryColor: UIColor? = nil, address: String? = nil, bubbleWidth: CGFloat = 256, bubbleHeight: CGFloat = 142) {
         self.image = image
         self.titlePlace = titlePlace
         self.ratingPlace = ratingPlace
         self.categoryPlace = categoryPlace
+        self.categoryColor = categoryColor
         self.address = address
         self.bubbleWidth = bubbleWidth
         self.bubbleHeight = bubbleHeight
@@ -146,6 +148,9 @@ open class LocationAnnotationNode: LocationNode {
         bubbleView.ratingLabel.text = ratingPlace
         bubbleView.ratingLabel.isHidden = ratingPlace == nil
         bubbleView.setRatingBackgroundColor()
+        if let color = categoryColor {
+            bubbleView.setBackgroundColorByCategory(color: color)
+        }
         
         bubbleView.categoryLabel.text = categoryPlace?.uppercased()
         bubbleView.categoryLabel.isHidden = categoryPlace == nil

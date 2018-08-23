@@ -62,6 +62,11 @@ class PlaceBubbleView: UIView {
         }
     }
     
+    func setBackgroundColorByCategory(color: UIColor) {
+        bubbleView.backgroundColor = color
+        triangleView.color = color
+    }
+    
     func updateDistanceLabel(nodeLocation: CLLocation, userLocation: CLLocation) {
         let distanceString = nodeLocation.distance(from: userLocation).stringFormatted
         distance.text = distanceString
